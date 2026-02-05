@@ -1,0 +1,17 @@
+
+
+
+
+
+arguments: E:\\MyProject\\EasyTshark\\cmake-build-debug-mingw\\EasyTshark.exe
+Current dir: E:\MyProject\EasyTshark\cmake-build-debug-mingw
+File verbosity level: 9
+date       time         ( uptime  ) [ thread name/id ]                   file:line     v| 
+2025-12-28 16:29:56.760 (   0.034s) [main thread     ]             loguru.cpp:845   INFO| Logging to 'app.log', mode: 'a', verbosity: 9
+2025-12-28 16:29:56.777 (   0.049s) [main thread     ]               main.cpp:25    INFO| 请输入要分析的PCAP文件路径: 
+2025-12-28 16:30:45.007 (  48.279s) [main thread     ]      TsharkManager.cpp:31    INFO| 解析文件数据......
+2025-12-28 16:30:45.278 (  48.551s) [main thread     ]      TsharkManager.cpp:71    INFO| 分析完成，数据包总数：60
+2025-12-28 16:30:45.296 (  48.569s) [main thread     ]               main.cpp:33    INFO| 分析完成，共捕获到 60 个数据包
+2025-12-28 16:30:45.301 (  48.573s) [main thread     ]               main.cpp:37    INFO| 请输入要获取详情的数据包编号: 
+2025-12-28 16:30:48.652 (  51.924s) [main thread     ]               main.cpp:53    INFO| 数据包详情已保存到 E:/MyProject/EasyTshark/18.json
+2025-12-28 16:30:48.661 (  51.934s) [main thread     ]             loguru.cpp:541   INFO| atexit

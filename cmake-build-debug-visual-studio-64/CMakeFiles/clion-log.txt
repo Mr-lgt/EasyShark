@@ -1,0 +1,4 @@
+"D:\Program Files\JetBrains\CLion 2020.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - NMake Makefiles" E:\MyProject\EasyTshark
+-- Configuring done
+-- Generating done
+-- Build files have been written to: E:/MyProject/EasyTshark/cmake-build-debug-visual-studio-64

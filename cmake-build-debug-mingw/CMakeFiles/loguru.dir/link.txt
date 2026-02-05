@@ -1,0 +1,2 @@
+C:\msys64\mingw64\bin\ar.exe qc libloguru.a  CMakeFiles/loguru.dir/third_library/loguru/loguru.cpp.obj
+C:\msys64\mingw64\bin\ranlib.exe libloguru.a
