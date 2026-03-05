@@ -1,3 +1,0 @@
-E:/MyProject/EasyTshark/build/CMakeFiles/rebuild_cache.dir
-E:/MyProject/EasyTshark/build/CMakeFiles/EasyTshark.dir
-E:/MyProject/EasyTshark/build/CMakeFiles/edit_cache.dir
