@@ -7,6 +7,10 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#include <io.h>
+#include <fcntl.h>
+#include <csignal>
+#include <tlhelp32.h>
 typedef DWORD PID_T;
 #else
 #include <unistd.h>

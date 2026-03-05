@@ -1,6 +1,9 @@
 // EasyTshark.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 #include "task/TsharkManager.h"
+#include "controller/packet_controller.hpp"
 
+std::shared_ptr<TsharkManager> g_ptrTsharkManager = nullptr;
+ 
 void InitLog(int argc, char *argv[])
 {
     // 初始化 Loguru
@@ -100,6 +103,17 @@ void jsonDemo(TsharkManager &tsharkManager)
     LOG_F(INFO, "网卡流量监控数据: %s", buffer.GetString());
 }
 
+httplib::Server::HandlerResponse before_request(const httplib::Request &req, httplib::Response &res)
+{
+    LOG_F(INFO, "Request received for %s", req.path.c_str());
+    return httplib::Server::HandlerResponse::Unhandled;
+}
+
+void after_response(const httplib::Request &req, const httplib::Response &res)
+{
+    LOG_F(INFO, "Received response with status %d", res.status);
+}
+
 int main(int argc, char *argv[])
 {
     // 设置控制台环境编码为UTF-8格式，防止打印输出的内容乱码
@@ -107,22 +121,40 @@ int main(int argc, char *argv[])
 
     InitLog(argc, argv);
 
-    std::string workDir = "E:/MyProject/EasyTshark/";
-    TsharkManager tsharkManager(workDir);
+    // 初始化 TsharkManager
+    g_ptrTsharkManager = std::make_shared<TsharkManager>("E:/MyProject/EasyTshark/");
+    g_ptrTsharkManager->analysisFile("E:/MyProject/EasyTshark/capture.pcap");
 
-    tsharkManager.startCapture("WLAN");
+    // 创建一个 HTTP 服务器对象
+    httplib::Server server;
 
-    std::string input;
-    while (true)
-    {
-        std::cout << "请输入q退出抓包\n";
-        std::cin >> input;
-        if (input == "q")
-        {
-            tsharkManager.stopCapture();
-            break;
-        }
-    }
+    // 设置钩子函数
+    server.set_pre_routing_handler(before_request);
+    server.set_post_routing_handler(after_response);
+
+    // 设置查询数据包的接口路由
+    PacketController packetController(server, g_ptrTsharkManager);
+    packetController.registerRoute();
+
+    // 启动服务器，监听 8080 端口
+    server.listen("127.0.0.1", 8080);
+
+    // std::string workDir = "E:/MyProject/EasyTshark/";
+    // TsharkManager tsharkManager(workDir);
+
+    // tsharkManager.startCapture("WLAN");
+
+    // std::string input;
+    // while (true)
+    // {
+    //     std::cout << "请输入q退出抓包\n";
+    //     std::cin >> input;
+    //     if (input == "q")
+    //     {
+    //         tsharkManager.stopCapture();
+    //         break;
+    //     }
+    // }
     // tsharkManager.printAllPackets();
     // tsharkManager.analysisFile("E:/pcap/packets2.pcap");
 

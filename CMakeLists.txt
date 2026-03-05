@@ -12,10 +12,11 @@ add_executable(EasyTshark
         main.cpp
         utils/ProcessUtil.cpp
         utils/translator_util.hpp
-        utils/http_util.hpp
+        data/packet_sql.hpp
         data/tshark_datatype.h
         task/TsharkManager.cpp
         data/TsharkDataBase.hpp
+        controller/packet_controller.hpp
         utils/ip2region_util.cpp
         third_library/ip2region/xdb_bench.cc
         third_library/ip2region/xdb_search.cc

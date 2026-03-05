@@ -1,6 +1,7 @@
 //
 // Created by Mr.Lu on 2025/11/2.
 //
+#pragma once
 
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
@@ -75,6 +76,9 @@ public:
 
   // 处理解析出的数据包
   void processPackets(std::shared_ptr<Packet> packet);
+
+  // -----------------------------数据查询相关接口-----------------------------------
+  void queryPackets(QueryCondition &queryCondition, std::vector<std::shared_ptr<Packet>> &packets);
 
 private:
   // 解析每一行

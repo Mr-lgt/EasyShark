@@ -10,8 +10,17 @@
 #include <cstdlib>
 #include <cstring>
 #include <vector>
-#include <cstdint>  // 包含标准整数类型定义
-#include <string>   // 包含std::string定义
+
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/prettywriter.h"
+#include "rapidjson/stringbuffer.h"
+
+class BaseDataObject {
+public:
+    // 将对象转换为JSON Value，用于转换为JSON格式输出
+    virtual void toJsonObj(rapidjson::Value& obj, rapidjson::Document::AllocatorType& allocator) const = 0;
+};
 
 struct PcapHeader {
   uint32_t magic_number;    // 文件格式标识符
@@ -31,22 +40,42 @@ struct PacketHeader {
   uint32_t len;            // 原始数据长度
 };
 
-struct Packet {
-  int frame_number;            // 数据包编号
-  double time;            // 数据包的时间戳
-  std::string src_mac;
-  std::string dst_mac;
-  uint32_t cap_len;
-  uint32_t len;
-  std::string src_ip;            // 源IP地址
-  uint16_t src_port;            //源端口号
-  std::string src_location;       //源IP归属地
-  std::string dst_ip;            // 目的IP地址
-  uint16_t dst_port;            //目的端口号
-  std::string dst_location;     //目的IP归属地
-  std::string protocol;        // 协议
-  std::string info;            // 数据包的概要信息
-  uint32_t file_offset;
+class Packet{
+public:
+    int frame_number;
+    double time;
+    uint32_t cap_len;
+    uint32_t len;
+    std::string src_mac;
+    std::string dst_mac;
+    std::string src_ip;
+    std::string src_location;
+    uint16_t src_port;
+    std::string dst_ip;
+    std::string dst_location;
+    uint16_t dst_port;
+    std::string protocol;
+    std::string info;
+    uint32_t file_offset;
+
+    void toJsonObj(rapidjson::Value& obj, rapidjson::Document::AllocatorType& allocator) const {
+        rapidjson::Value pktObj(rapidjson::kObjectType);
+        obj.AddMember("frame_number", frame_number, allocator);
+        obj.AddMember("timestamp", time, allocator);
+        obj.AddMember("src_mac", rapidjson::Value(src_mac.c_str(), allocator), allocator);
+        obj.AddMember("dst_mac", rapidjson::Value(dst_mac.c_str(), allocator), allocator);
+        obj.AddMember("src_ip", rapidjson::Value(src_ip.c_str(), allocator), allocator);
+        obj.AddMember("src_location", rapidjson::Value(src_location.c_str(), allocator), allocator);
+        obj.AddMember("src_port", src_port, allocator);
+        obj.AddMember("dst_ip", rapidjson::Value(dst_ip.c_str(), allocator), allocator);
+        obj.AddMember("dst_location", rapidjson::Value(dst_location.c_str(), allocator), allocator);
+        obj.AddMember("dst_port", dst_port, allocator);
+        obj.AddMember("len", len, allocator);
+        obj.AddMember("cap_len", cap_len, allocator);
+        obj.AddMember("protocol", rapidjson::Value(protocol.c_str(), allocator), allocator);
+        obj.AddMember("info", rapidjson::Value(info.c_str(), allocator), allocator);
+        obj.AddMember("file_offset", file_offset, allocator);
+    }
 };
 
 // 网卡信息
@@ -54,6 +83,14 @@ struct AdapterInfo {
   int id;
   std::string name;
   std::string remark;
+};
+
+// 查询条件
+class QueryCondition {
+public:
+    std::string ip;
+    uint16_t port = 0;
+    std::string proto;
 };
 
 #endif // TSHARK_DATATYPE_H

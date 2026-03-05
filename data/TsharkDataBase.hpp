@@ -1,7 +1,10 @@
+#pragma once
+
 #include "sqlite3/sqlite3.h"
 #include "tshark_datatype.h"
 #include "../utils/misc_util.hpp"
 #include "loguru/loguru.hpp"
+#include "packet_sql.hpp"
 
 class TsharkDataBase
 {
@@ -131,16 +134,21 @@ public:
         return !hasError;
     }
 
-    bool queryPackets(std::vector<std::shared_ptr<Packet>> &packetList)
+    // 从数据库查询数据包分页数据
+    bool queryPackets(QueryCondition& queryConditon, std::vector<std::shared_ptr<Packet>> &packetList)
     {
-        // 从数据库查询数据包分页数据
-        sqlite3_stmt *stmt = nullptr;
-        std::string sql = "select * from t_packets";
+        sqlite3_stmt *stmt = nullptr, *countStmt = nullptr;
+        std::string sql = PacketSQL::buildPacketQuerySQL(queryConditon);
         if (sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
         {
             LOG_F(ERROR, "Failed to prepare statement: %s", sqlite3_errmsg(db));
             return false;
         }
+
+        sqlite3_bind_text(stmt, 1, queryConditon.ip.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_text(stmt, 2, queryConditon.ip.c_str(), -1, SQLITE_STATIC);
+        sqlite3_bind_int(stmt, 3, queryConditon.port);
+        sqlite3_bind_int(stmt, 4, queryConditon.port);
 
         // 执行查询语句
         while (sqlite3_step(stmt) == SQLITE_ROW)

@@ -686,3 +686,8 @@ void TsharkManager::processPackets(std::shared_ptr<Packet> packet)
     packetsTobeStore.push_back(packet);
     storeLock.unlock();
 }
+
+void TsharkManager::queryPackets(QueryCondition &queryCondition, std::vector<std::shared_ptr<Packet>> &packets)
+{
+    storage->queryPackets(queryCondition, packets);
+}
